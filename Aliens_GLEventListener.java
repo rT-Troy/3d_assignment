@@ -123,7 +123,7 @@ public class Aliens_GLEventListener implements GLEventListener {
 
     textures = new TextureLibrary();
     textures.add(gl, "background", "textures/snow_background.jpg");
-    textures.add(gl, "snowfall", "textures/snowfall.jpg");
+    textures.add(gl, "snowfall", "textures/snowfall_black.jpg");
 
     
     light = new Light(gl);
@@ -156,8 +156,7 @@ public class Aliens_GLEventListener implements GLEventListener {
     floor.setModelMatrix(getMforFloor());
     floor.render(gl); 
     background.setModelMatrix(getMforBackground());
-    //background.setShader(gl);
-    background.render_Shader(gl, textures);
+    background.render(gl);
     if (animation) {
       double elapsedTime = getSeconds()-startTime;
       robot.updateAnimation(elapsedTime);
@@ -165,8 +164,6 @@ public class Aliens_GLEventListener implements GLEventListener {
     robot.render(gl);
   }
 
-  
-  
   // The light's postion is continually being changed, so needs to be calculated for each frame.
   private Vec3 getLightPosition() {
     double elapsedTime = getSeconds()-startTime;
@@ -202,6 +199,7 @@ public class Aliens_GLEventListener implements GLEventListener {
     }
   }
 
+  // combine two planes
   private float SIDE_LENGTH = 12f;
   private Mat4 getMforFloor() {
     Mat4 modelMatrix = new Mat4(1);

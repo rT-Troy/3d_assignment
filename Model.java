@@ -64,6 +64,9 @@ public class Model {
     this.material = material;
   }
 
+  public Shader getShader(){
+    return this.shader;
+  }
   public void setShader(Shader shader) {
     this.shader = shader;
   }
@@ -92,56 +95,6 @@ public class Model {
     render(gl, modelMatrix);
   }
 
-  public void render_Shader(GL3 gl, TextureLibrary textures) {
-    if (mesh_null()) {
-      System.out.println("Error: null in model render");
-      return;
-    }
-
-    Mat4 mvpMatrix = Mat4.multiply(camera.getPerspectiveMatrix(), Mat4.multiply(camera.getViewMatrix(), modelMatrix));
-
-    // set shader variables. Be careful that these variables exist in the shader
-
-    shader.use(gl);
-
-    shader.setFloatArray(gl, "model", modelMatrix.toFloatArrayForGLSL());
-    shader.setFloatArray(gl, "mvpMatrix", mvpMatrix.toFloatArrayForGLSL());
-    
-    shader.setVec3(gl, "viewPos", camera.getPosition());
-
-    shader.setVec3(gl, "light.position", light.getPosition());
-    shader.setVec3(gl, "light.ambient", light.getMaterial().getAmbient());
-    shader.setVec3(gl, "light.diffuse", light.getMaterial().getDiffuse());
-    shader.setVec3(gl, "light.specular", light.getMaterial().getSpecular());
-
-    shader.setVec3(gl, "material.ambient", material.getAmbient());
-    shader.setVec3(gl, "material.diffuse", material.getDiffuse());
-    shader.setVec3(gl, "material.specular", material.getSpecular());
-    shader.setFloat(gl, "material.shininess", material.getShininess());
-
-    double elapsedTime = getSeconds() - startTime;
-    
-    double t = elapsedTime*0.1;  // *0.1 slows it down a bit
-    float offsetY = (float)(t - Math.floor(t));
-    float offsetX = 0.0f;
-
-    offsetY = (float)Math.sin((t - Math.floor(t))*1.5708);
-    offsetX = (float)(Math.sin(elapsedTime*1.1)*0.2);
-    shader.setFloat(gl, "offset", offsetY, offsetX);
-
-    if (diffuse!=null) {
-      shader.setInt(gl, "first_texture", 0);  // be careful to match these with GL_TEXTURE0 and GL_TEXTURE1
-      gl.glActiveTexture(GL.GL_TEXTURE0);
-      diffuse.bind(gl);
-    }
-    if (specular!=null) {
-      shader.setInt(gl, "second_texture", 1);
-      gl.glActiveTexture(GL.GL_TEXTURE1);
-      specular.bind(gl);
-    }
-    // then render the mesh
-    mesh.render(gl);
-  }
 
   // second version of render is so that modelMatrix can be overriden with a new parameter
   public void render(GL3 gl, Mat4 modelMatrix) {
@@ -170,6 +123,8 @@ public class Model {
     shader.setVec3(gl, "material.diffuse", material.getDiffuse());
     shader.setVec3(gl, "material.specular", material.getSpecular());
     shader.setFloat(gl, "material.shininess", material.getShininess());
+    this.dynamic(gl);
+
 
     // If there is a mismatch between the number of textures the shader expects and the number we try to set here, then there will be problems.
     // Assumption is the user supplied the right shader and the right number of textures for the model
@@ -195,6 +150,14 @@ public class Model {
 
   public void dispose(GL3 gl) {
     mesh.dispose(gl);  // only need to dispose of mesh
+  }
+
+  private void dynamic(GL3 gl) {
+    double elapsedTime = getSeconds() - startTime;
+    double t = elapsedTime*0.1;
+    float offsetY = (float)(t - Math.floor(t));
+    float offsetX = 0.0f;
+    shader.setFloat(gl, "offset", offsetX, offsetY);;
   }
   
   private double startTime;
