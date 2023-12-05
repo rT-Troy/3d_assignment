@@ -117,7 +117,8 @@ public class Aliens_GLEventListener implements GLEventListener {
   //private SGNode robotRoot;
   
   private Robot robot;
-  private Alien alien;
+  private Alien alien1;
+  private Alien alien2;
 
   private void initialise(GL3 gl) {
     createRandomNumbers();
@@ -125,9 +126,10 @@ public class Aliens_GLEventListener implements GLEventListener {
     textures = new TextureLibrary();
     textures.add(gl, "background", "textures/snow_background.jpg");
     textures.add(gl, "snowfall", "textures/snowfall_black.jpg");
-    textures.add(gl, "alien_head1", "textures/alien_head1.jpg");
-    textures.add(gl, "alien_body1", "textures/alien_body1.jpg");
-
+    textures.add(gl, "texture1", "textures/texture1.jpg");
+    textures.add(gl, "texture2", "textures/texture2.jpg");
+    textures.add(gl, "texture3", "textures/texture3.jpg");
+    textures.add(gl, "texture4", "textures/texture4.jpg");
     
     light = new Light(gl);
     light.setCamera(camera);
@@ -146,11 +148,14 @@ public class Aliens_GLEventListener implements GLEventListener {
     // diffuse texture only for this model
     background = new Model(name, mesh, new Mat4(1), shader, material, light, camera, textures.get("background"), textures.get("snowfall"));
     
+    float posX1 = -1f;
+    float posX2 = 3f;
     //robot = new Robot(gl, camera, light, 
     //                  textures.get("jade_diffuse"), textures.get("jade_specular"),
     //                  textures.get("container_diffuse"), textures.get("container_specular"),
     //                  textures.get("watt_diffuse"), textures.get("watt_specular")); 
-    alien = new Alien(gl, camera, light, textures.get("alien_body1"), textures.get("alien_head1"));
+    alien1 = new Alien(gl, camera, light, posX1, textures.get("texture1"), textures.get("texture2"), textures.get("texture3"), textures.get("texture4"));
+    alien2 = new Alien(gl, camera, light, posX2, textures.get("texture3"), textures.get("texture2"), textures.get("texture4"), textures.get("texture4"));
   }
  
   private void render(GL3 gl) {
@@ -166,7 +171,8 @@ public class Aliens_GLEventListener implements GLEventListener {
       robot.updateAnimation(elapsedTime);
     }
     //robot.render(gl);
-    alien.render(gl);
+    alien1.render(gl);
+    alien2.render(gl);
   }
 
   // The light's postion is continually being changed, so needs to be calculated for each frame.
