@@ -150,7 +150,7 @@ public class Aliens_GLEventListener implements GLEventListener {
     //                  textures.get("jade_diffuse"), textures.get("jade_specular"),
     //                  textures.get("container_diffuse"), textures.get("container_specular"),
     //                  textures.get("watt_diffuse"), textures.get("watt_specular")); 
-    alien = new Alien(gl, camera, light, textures.get("alien_head1"), textures.get("alien_body1"));
+    alien = new Alien(gl, camera, light, textures.get("alien_body1"), textures.get("alien_head1"));
   }
  
   private void render(GL3 gl) {
