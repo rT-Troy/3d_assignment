@@ -6,29 +6,29 @@ import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 
-public class M04 extends JFrame implements ActionListener {
+public class Aliens extends JFrame implements ActionListener {
   
   private static final int WIDTH = 1024;
   private static final int HEIGHT = 768;
   private static final Dimension dimension = new Dimension(WIDTH, HEIGHT);
   private GLCanvas canvas;
-  private M04_GLEventListener glEventListener;
+  private Aliens_GLEventListener glEventListener;
   private final FPSAnimator animator; 
   private Camera camera;
 
   public static void main(String[] args) {
-    M04 b1 = new M04("M04");
+    Aliens b1 = new Aliens("Aliens");
     b1.getContentPane().setPreferredSize(dimension);
     b1.pack();
     b1.setVisible(true);
   }
 
-  public M04(String textForTitleBar) {
+  public Aliens(String textForTitleBar) {
     super(textForTitleBar);
     GLCapabilities glcapabilities = new GLCapabilities(GLProfile.get(GLProfile.GL3));
     canvas = new GLCanvas(glcapabilities);
     camera = new Camera(Camera.DEFAULT_POSITION, Camera.DEFAULT_TARGET, Camera.DEFAULT_UP);
-    glEventListener = new M04_GLEventListener(camera);
+    glEventListener = new Aliens_GLEventListener(camera);
     canvas.addGLEventListener(glEventListener);
     canvas.addMouseMotionListener(new MyMouseInput(camera));
     canvas.addKeyListener(new MyKeyboardInput(camera));
@@ -61,12 +61,12 @@ public class M04 extends JFrame implements ActionListener {
       b = new JButton("decrease X position");
       b.addActionListener(this);
       p.add(b);
-      b = new JButton("lowered arms");
-      b.addActionListener(this);
-      p.add(b);
-      b = new JButton("raised arms");
-      b.addActionListener(this);
-      p.add(b);
+      // b = new JButton("lowered arms");
+      // b.addActionListener(this);
+      // p.add(b);
+      // b = new JButton("raised arms");
+      // b.addActionListener(this);
+      // p.add(b);
     this.add(p, BorderLayout.SOUTH);
     
     addWindowListener(new WindowAdapter() {
@@ -102,12 +102,12 @@ public class M04 extends JFrame implements ActionListener {
     else if (e.getActionCommand().equalsIgnoreCase("decrease X position")) {
       glEventListener.decXPosition();
     }
-    else if (e.getActionCommand().equalsIgnoreCase("lowered arms")) {
-      glEventListener.loweredArms();
-    }
-    else if (e.getActionCommand().equalsIgnoreCase("raised arms")) {
-      glEventListener.raisedArms();
-    }
+    // else if (e.getActionCommand().equalsIgnoreCase("lowered arms")) {
+    //   glEventListener.loweredArms();
+    // }
+    // else if (e.getActionCommand().equalsIgnoreCase("raised arms")) {
+    //   glEventListener.raisedArms();
+    // }
     else if(e.getActionCommand().equalsIgnoreCase("quit"))
       System.exit(0);
   }

@@ -10,13 +10,13 @@ import com.jogamp.opengl.util.texture.*;
 import com.jogamp.opengl.util.texture.awt.*;
 import com.jogamp.opengl.util.texture.spi.JPEGImage;
   
-public class M04_GLEventListener implements GLEventListener {
+public class Aliens_GLEventListener implements GLEventListener {
   
   private static final boolean DISPLAY_SHADERS = false;
     
-  public M04_GLEventListener(Camera camera) {
+  public Aliens_GLEventListener(Camera camera) {
     this.camera = camera;
-    this.camera.setPosition(new Vec3(4f,12f,18f));
+    this.camera.setPosition(new Vec3(0f,25f,18f));
   }
   
   // ***************************************************
@@ -90,15 +90,15 @@ public class M04_GLEventListener implements GLEventListener {
     robot.decXPosition();
   }
   
-  public void loweredArms() {
-    stopAnimation();
-    robot.loweredArms();
-  }
+  // public void loweredArms() {
+  //   stopAnimation();
+  //   robot.loweredArms();
+  // }
    
-  public void raisedArms() {
-    stopAnimation();
-    robot.raisedArms();
-  }
+  // public void raisedArms() {
+  //   stopAnimation();
+  //   robot.raisedArms();
+  // }
   
   // ***************************************************
   /* THE SCENE
@@ -112,6 +112,7 @@ public class M04_GLEventListener implements GLEventListener {
   private Camera camera;
   private Mat4 perspective;
   private Model floor;
+  private Model background;
   private Light light;
   //private SGNode robotRoot;
   
@@ -121,24 +122,26 @@ public class M04_GLEventListener implements GLEventListener {
     createRandomNumbers();
 
     textures = new TextureLibrary();
-    textures.add(gl, "chequerboard", "textures/chequerboard.jpg");
-    textures.add(gl, "jade_diffuse", "textures/jade.jpg");
-    textures.add(gl, "jade_specular", "textures/jade_specular.jpg");
-    textures.add(gl, "container_diffuse", "textures/container2.jpg");
-    textures.add(gl, "container_specular", "textures/container2_specular.jpg");
-    textures.add(gl, "watt_diffuse", "textures/wattBook.jpg");
-    textures.add(gl, "watt_specular", "textures/wattBook_specular.jpg");
+    textures.add(gl, "background", "textures/snow_background.jpg");
+    textures.add(gl, "snowfall", "textures/snowfall.jpg");
+
     
     light = new Light(gl);
     light.setCamera(camera);
     
     // floor
     String name = "floor";
-    Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
+    Mesh mesh = new Mesh(gl, TwoTriangles.vertices_floor.clone(), TwoTriangles.indices.clone());
     Shader shader = new Shader(gl, "vs_standard.txt", "fs_standard_1t.txt");
-    Material material = new Material(new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.3f, 0.3f, 0.3f), 32.0f);
-    Mat4 modelMatrix = Mat4Transform.scale(16,1f,16);
-    floor = new Model(name, mesh, modelMatrix, shader, material, light, camera, textures.get("chequerboard"));
+    Material material = new Material(new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.3f, 0.3f, 0.3f), 16.0f);
+    floor = new Model(name, mesh, new Mat4(1), shader, material, light, camera, textures.get("background"));
+
+    name = "background";
+    mesh = new Mesh(gl, TwoTriangles.vertices_background.clone(), TwoTriangles.indices.clone());
+    shader = new Shader(gl, "vs_background.txt", "fs_background.txt");
+    material = new Material(new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.3f, 0.3f, 0.3f), 16.0f); 
+    // diffuse texture only for this model
+    background = new Model(name, mesh, new Mat4(1), shader, material, light, camera, textures.get("background"), textures.get("snowfall"));
     
     robot = new Robot(gl, camera, light, 
                       textures.get("jade_diffuse"), textures.get("jade_specular"),
@@ -150,7 +153,11 @@ public class M04_GLEventListener implements GLEventListener {
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
     light.setPosition(getLightPosition());  // changing light position each frame
     light.render(gl);
+    floor.setModelMatrix(getMforFloor());
     floor.render(gl); 
+    background.setModelMatrix(getMforBackground());
+    //background.setShader(gl);
+    background.render_Shader(gl, textures);
     if (animation) {
       double elapsedTime = getSeconds()-startTime;
       robot.updateAnimation(elapsedTime);
@@ -193,6 +200,21 @@ public class M04_GLEventListener implements GLEventListener {
     for (int i=0; i<NUM_RANDOMS; ++i) {
       randoms[i] = (float)Math.random();
     }
+  }
+
+  private float SIDE_LENGTH = 12f;
+  private Mat4 getMforFloor() {
+    Mat4 modelMatrix = new Mat4(1);
+    modelMatrix = Mat4.multiply(Mat4Transform.scale(SIDE_LENGTH,1f,SIDE_LENGTH), modelMatrix);
+    return modelMatrix;
+}
+
+  private Mat4 getMforBackground() {
+    Mat4 modelMatrix = new Mat4(1);
+    modelMatrix = Mat4.multiply(Mat4Transform.scale(SIDE_LENGTH,1f,SIDE_LENGTH), modelMatrix);
+    modelMatrix = Mat4.multiply(Mat4Transform.rotateAroundX(90), modelMatrix);
+    modelMatrix = Mat4.multiply(Mat4Transform.translate(0,SIDE_LENGTH*0.5f,-SIDE_LENGTH*0.5f), modelMatrix);
+    return modelMatrix;
   }
   
 }

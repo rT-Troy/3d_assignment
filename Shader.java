@@ -4,7 +4,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.charset.Charset;
 import com.jogamp.opengl.*;
-import com.jogamp.opengl.util.glsl.*;  
+import com.jogamp.opengl.util.glsl.*;
+import com.jogamp.opengl.util.texture.Texture;  
   
 public class Shader {
   

@@ -1,0 +1,7 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/home/troy/3dprojects/jogl25/jar/jogl-all.jar",
+        "/home/troy/3dprojects/jogl25/jar/gluegen-rt.jar"
+    ]
+}
