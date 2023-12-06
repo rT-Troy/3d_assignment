@@ -10,16 +10,29 @@ public class Light {
   private Mat4 model;
   private Shader shader;
   private Camera camera;
-    
-  public Light(GL3 gl) {
-    material = new Material();
-    material.setAmbient(0.5f, 0.5f, 0.5f);
-    material.setDiffuse(0.8f, 0.8f, 0.8f);
-    material.setSpecular(0.8f, 0.8f, 0.8f);
-    position = new Vec3(3f,2f,1f);
-    model = new Mat4(1);
-    shader = new Shader(gl, "vs_light_01.txt", "fs_light_01.txt");
-    fillBuffers(gl);
+  
+  //boolean spot: True if it is security spotlight
+  public Light(GL3 gl, Vec3 vec3, boolean isSpotlight) {
+    if (isSpotlight) {
+      material = new Material();
+      material.setAmbient(0.9f, 0.9f, 0.9f);
+      material.setDiffuse(0.8f, 0.8f, 0.8f);
+      material.setSpecular(0.8f, 0.8f, 0.8f);
+      position = vec3;
+      model = new Mat4(1);
+      fillBuffers(gl);
+      shader = new Shader(gl, "shaders/vs_light_01.txt", "shaders/fs_light_01.txt");
+
+    } else {
+      material = new Material();
+      material.setAmbient(0.25f, 0.25f, 0.25f);
+      material.setDiffuse(0.4f, 0.4f, 0.4f);
+      material.setSpecular(0.4f, 0.4f, 0.4f);
+      position = vec3; //new Vec3(3f,2f,1f);
+      model = new Mat4(1);
+      fillBuffers(gl);
+      shader = new Shader(gl, "shaders/vs_light_01.txt", "shaders/fs_light_01.txt");
+    }
   }
   
   public void setPosition(Vec3 v) {

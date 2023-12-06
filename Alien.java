@@ -13,7 +13,7 @@ import com.jogamp.opengl.util.texture.spi.JPEGImage;
 public class Alien {
     
   private Camera camera;
-  private Light light;
+  private Light[] lights;
 
   private Model head_sphere, body_sphere, arm_sphere, eye_sphere, ear_sphere, antstick_sphere, antsphere_sphere;
   private TransformNode translateX, alienMoveTranslate, bodyRotate, headRotate;
@@ -23,9 +23,9 @@ public class Alien {
   private float headRotateAngleStart = 15, headRotateAngle = headRotateAngleStart;
 
 
-  public Alien(GL3 gl, Camera cameraIn, Light lightIn, float posX, Texture t1, Texture t2, Texture t3, Texture t4, Texture t5, Texture t6) {
+  public Alien(GL3 gl, Camera cameraIn, Light[] lightsIn, float posX, Texture t1, Texture t2, Texture t3, Texture t4, Texture t5, Texture t6) {
       this.camera = cameraIn;
-      this.light = lightIn;
+      this.lights = lightsIn;
       this.xPosition = posX;
 
       body_sphere = makeSphere(gl, t1, t2);
@@ -173,10 +173,10 @@ public class Alien {
   private Model makeSphere(GL3 gl, Texture t1, Texture t2) {
     String name= "sphere";
     Mesh mesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
-    Shader shader = new Shader(gl, "vs_standard.txt", "fs_standard_2t.txt");
+    Shader shader = new Shader(gl, "shaders/vs_standard.txt", "shaders/fs_standard_2t.txt");
     Material material = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
     Mat4 modelMatrix = Mat4.multiply(Mat4Transform.scale(4,4,4), Mat4Transform.translate(0,0.5f,0));
-    Model sphere = new Model(name, mesh, modelMatrix, shader, material, light, camera, t1, t2);
+    Model sphere = new Model(name, mesh, modelMatrix, shader, material, lights, camera, t1, t2);
     return sphere;
   } 
 

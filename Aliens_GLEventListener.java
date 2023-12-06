@@ -16,7 +16,8 @@ public class Aliens_GLEventListener implements GLEventListener {
     
   public Aliens_GLEventListener(Camera camera) {
     this.camera = camera;
-    this.camera.setPosition(new Vec3(0f,25f,18f));
+    this.camera.setPosition(new Vec3(0f,15f,18f));
+    this.camera.setTarget(new Vec3(0f, 5f, 0f));
   }
   
   // ***************************************************
@@ -36,7 +37,6 @@ public class Aliens_GLEventListener implements GLEventListener {
     gl.glEnable(GL.GL_CULL_FACE); // default is 'not enabled'
     gl.glCullFace(GL.GL_BACK);   // default is 'back', assuming CCW
     initialise(gl);
-    startTime = getSeconds();
   }
   
   /* Called to indicate the drawing surface has been moved and/or resized  */
@@ -56,7 +56,11 @@ public class Aliens_GLEventListener implements GLEventListener {
   /* Clean up memory, if necessary */
   public void dispose(GLAutoDrawable drawable) {
     GL3 gl = drawable.getGL().getGL3();
-    light.dispose(gl);
+    lights[0].dispose(gl);
+    lights[1].dispose(gl);
+    lights[2].dispose(gl);
+    // genlight1.dispose(gl);
+    // genlight2.dispose(gl);
     floor.dispose(gl);
     alien1.dispose(gl);
     alien2.dispose(gl);
@@ -73,7 +77,6 @@ public class Aliens_GLEventListener implements GLEventListener {
   private boolean rock2 = true;
   private boolean roll1 = true;
   private boolean roll2 = true;
-  private double savedTime = 0;
    
   public void rock1Animation() {
     rock1 = !rock1;
@@ -90,24 +93,6 @@ public class Aliens_GLEventListener implements GLEventListener {
   public void roll2Animation() {
     roll2 = !roll2;
   }
-   
-  public void incXPosition() {
-    robot.incXPosition();
-  }
-   
-  public void decXPosition() {
-    robot.decXPosition();
-  }
-  
-  // public void loweredArms() {
-  //   stopAnimation();
-  //   robot.loweredArms();
-  // }
-   
-  // public void raisedArms() {
-  //   stopAnimation();
-  //   robot.raisedArms();
-  // }
   
   // ***************************************************
   /* THE SCENE
@@ -122,10 +107,11 @@ public class Aliens_GLEventListener implements GLEventListener {
   private Mat4 perspective;
   private Model floor;
   private Model background;
-  private Light light;
-  //private SGNode robotRoot;
-  
-  private Robot robot;
+  // private GeneralLight genlight1;
+  // private GeneralLight genlight2;
+  // lights[1] is the security spotlight
+  // lights[2] and lights[3] is the general light
+  private Light[] lights = new Light[3];
   private Alien alien1;
   private Alien alien2;
 
@@ -143,34 +129,45 @@ public class Aliens_GLEventListener implements GLEventListener {
     textures.add(gl, "texture3_spec", "textures/jup0vss1_specular.jpg");
     textures.add(gl, "quicksand", "textures/quicksand.jpg");
 
-    light = new Light(gl);
-    light.setCamera(camera);
-    light.setPosition(new Vec3(-3f,5f,0f));
-    
+    // genlight1 = new GeneralLight(gl, new Vec3(-3f,5f,0f));
+    // genlight1.setCamera(camera);
+    // genlight2 = new GeneralLight(gl, new Vec3(3f,7f,3f));
+    // genlight2.setCamera(camera);
+    lights[0] = new Light(gl,new Vec3(-6f,6f,0f), true);
+    lights[0].setCamera(camera);
+    lights[1] = new Light(gl,new Vec3(3f,2f,1f), false);
+    lights[1].setCamera(camera);
+    lights[2] = new Light(gl,new Vec3(3f,2f,1f),false);
+    lights[2].setCamera(camera);
+
     // floor
     String name = "floor";
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices_floor.clone(), TwoTriangles.indices.clone());
-    Shader shader = new Shader(gl, "vs_standard.txt", "fs_standard_1t.txt");
+    Shader shader = new Shader(gl, "shaders/vs_standard.txt", "shaders/fs_standard_1t.txt");
     Material material = new Material(new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.3f, 0.3f, 0.3f), 16.0f);
-    floor = new Model(name, mesh, new Mat4(1), shader, material, light, camera, textures.get("background"));
+    floor = new Model(name, mesh, new Mat4(1), shader, material, lights, camera, textures.get("background"));
 
     name = "background";
     mesh = new Mesh(gl, TwoTriangles.vertices_background.clone(), TwoTriangles.indices.clone());
-    shader = new Shader(gl, "vs_background.txt", "fs_background.txt");
+    shader = new Shader(gl, "shaders/vs_background.txt", "shaders/fs_background.txt");
     material = new Material(new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.3f, 0.3f, 0.3f), 16.0f); 
     // diffuse texture only for this model
-    background = new Model(name, mesh, new Mat4(1), shader, material, light, camera, textures.get("background"), textures.get("snowfall"));
+    background = new Model(name, mesh, new Mat4(1), shader, material, lights, camera, textures.get("background"), textures.get("snowfall"));
     
     float posX1 = -1f;
     float posX2 = 3f;
-    alien1 = new Alien(gl, camera, light, posX1, textures.get("texture1"), textures.get("texture1_spec"), textures.get("texture2"), textures.get("texture2_spec"), textures.get("texture3"), textures.get("texture3_spec"));
-    alien2 = new Alien(gl, camera, light, posX2, textures.get("quicksand"), textures.get("texture3_spec"), textures.get("texture1"), textures.get("texture1_spec"), textures.get("texture2"), textures.get("texture2_spec"));
+    alien1 = new Alien(gl, camera, lights, posX1, textures.get("texture1"), textures.get("texture1_spec"), textures.get("texture2"), textures.get("texture2_spec"), textures.get("texture3"), textures.get("texture3_spec"));
+    alien2 = new Alien(gl, camera, lights, posX2, textures.get("quicksand"), textures.get("texture3_spec"), textures.get("texture1"), textures.get("texture1_spec"), textures.get("texture2"), textures.get("texture2_spec"));
   }
  
   private void render(GL3 gl) {
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-    // light.setPosition(getLightPosition());  // changing light position each frame
-    light.render(gl);
+    lights[0].setPosition(-7, 8f, 0f);  // changing light position each frame
+    lights[0].render(gl);
+    lights[1].setPosition(3f,7f,3f);  // changing light position each frame
+    lights[1].render(gl);
+    lights[2].setPosition(new Vec3(-3f,5f,0f));  // changing light position each frame
+    lights[2].render(gl);
     floor.setModelMatrix(getMforFloor());
     floor.render(gl); 
     background.setModelMatrix(getMforBackground());
@@ -198,16 +195,6 @@ public class Aliens_GLEventListener implements GLEventListener {
     alien1.render(gl);
     alien2.render(gl);
   }
-
-  // // The light's postion is continually being changed, so needs to be calculated for each frame.
-  // private Vec3 getLightPosition() {
-  //   double elapsedTime = getSeconds()-startTime;
-  //   float x = 5.0f*(float)(Math.sin(Math.toRadians(elapsedTime*50)));
-  //   float y = 2.7f;
-  //   float z = 5.0f*(float)(Math.cos(Math.toRadians(elapsedTime*50)));
-  //   return new Vec3(x,y,z);   
-  //   //return new Vec3(5f,3.4f,5f);
-  // }
 
   
   // ***************************************************
