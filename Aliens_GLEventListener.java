@@ -126,16 +126,16 @@ public class Aliens_GLEventListener implements GLEventListener {
     //Build lights with position and identify if it is spotlight or general light
     lights[0] = new Light(gl,new Vec3(-3f,7.8f,0f), true);
     lights[0].setCamera(camera);
-    lights[1] = new Light(gl,new Vec3(3f,2f,3f), false);
+    lights[1] = new Light(gl,new Vec3(5f,4f,-5f), false);
     lights[1].setCamera(camera);
-    lights[2] = new Light(gl,new Vec3(3f,2f,1f),false);
+    lights[2] = new Light(gl,new Vec3(0f,6f,-2f),false);
     lights[2].setCamera(camera);
 
     // floor
     String name = "floor";
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices_floor.clone(), TwoTriangles.indices.clone());
     Shader shader = new Shader(gl, "shaders/vs_standard.txt", "shaders/fs_standard_m_1t.txt");
-    Material material = new Material(new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.3f, 0.3f, 0.3f), 16.0f);
+    Material material = new Material(new Vec3(0f, 0.2f, 0.2f), new Vec3(0.0f, 0.25f, 0.5f), new Vec3(0.25f, 0.25f, 0.25f), 16.0f);
     floor = new Model(name, mesh, new Mat4(1), shader, material, lights, camera, textures.get("background"));
 
     // background: snow scene with snowfall
@@ -211,7 +211,7 @@ public class Aliens_GLEventListener implements GLEventListener {
     Mat4 modelMatrix = new Mat4(1);
     modelMatrix = Mat4.multiply(Mat4Transform.scale(SIDE_LENGTH,1f,SIDE_LENGTH), modelMatrix);
     return modelMatrix;
-}
+  }
 
   private Mat4 getMforBackground() {
     Mat4 modelMatrix = new Mat4(1);

@@ -20,4 +20,14 @@ ear0xuu2.jpg - [https://github.com/nasa/NASA-3D-Resources]
 jup0vss1.jpg - [https://github.com/nasa/NASA-3D-Resources]
 
 ### Code Source
-Thanks to Professor Steve Maddock for providing the tutorial and material. Some of the code in this project is derived from his work.
+Thanks to Dr. Steve Maddock for providing the tutorial and material. Some of the code in this project is derived from his work.
+
+### My Main Works
+
+Aliens.java
+Aliens_GLEventListener.java
+Light.java
+LampPost.java
+Model.java: multiple lights support
+vs_background.txt: mix two textures
+fs_background.txt: mix two textures

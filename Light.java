@@ -28,7 +28,7 @@ public class Light {
   public void turnOn() {
     if (isSpotlight) {
       material.setAmbient(0.5f, 0.5f, 0.5f);
-      material.setDiffuse(0.3f, 0.3f, 0.3f);
+      material.setDiffuse(0.5f, 0.5f, 0.5f);
       material.setSpecular(0.2f, 0.2f, 0.2f);
     } else {
       material.setAmbient(0.1f, 0.1f, 0.1f);
