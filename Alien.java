@@ -23,18 +23,18 @@ public class Alien {
   private float headRotateAngleStart = 15, headRotateAngle = headRotateAngleStart;
 
 
-  public Alien(GL3 gl, Camera cameraIn, Light lightIn, float posX, Texture t1, Texture t2, Texture t3, Texture t4) {
+  public Alien(GL3 gl, Camera cameraIn, Light lightIn, float posX, Texture t1, Texture t2, Texture t3, Texture t4, Texture t5, Texture t6) {
       this.camera = cameraIn;
       this.light = lightIn;
       this.xPosition = posX;
 
-      arm_sphere = makeSphere(gl, t1,t2);
-      eye_sphere = makeSphere(gl, t1, t3);
-      body_sphere = makeSphere(gl, t1, t4);
-      head_sphere = makeSphere(gl, t2, t3);
-      ear_sphere = makeSphere(gl, t2, t4);
-      antstick_sphere = makeSphere(gl, t3, t4);
-      antsphere_sphere = makeSphere(gl, t3, t4);
+      body_sphere = makeSphere(gl, t1, t2);
+      head_sphere = makeSphere(gl, t3, t4);
+      arm_sphere = makeSphere(gl, t5,t6);
+      eye_sphere = makeSphere(gl, t2, t4);
+      ear_sphere = makeSphere(gl, t4, t6);
+      antstick_sphere = makeSphere(gl, t1, t3);
+      antsphere_sphere = makeSphere(gl, t3, t5);
 
       float headRadius = 2f/2;
       float headScale = 2f;
@@ -63,7 +63,7 @@ public class Alien {
         TransformNode bodyTransform = new TransformNode("alien body", m);
           ModelNode bodyShape = new ModelNode("Sphere(body)", body_sphere);
       // body animate
-      bodyRotate = new TransformNode("body rotate",Mat4Transform.rotateAroundZ(bodyRotateAngle));
+      bodyRotate = new TransformNode("body rotate",Mat4Transform.rotateAroundZ(0));
 
       NameNode head = new NameNode("head"); 
         m = new Mat4(1);
@@ -71,7 +71,7 @@ public class Alien {
         m = Mat4.multiply(m, Mat4Transform.scale(headScale,headScale,headScale));
         TransformNode headTransform = new TransformNode("alien head", m);
           ModelNode headShape = new ModelNode("Sphere(head)", head_sphere);
-      headRotate = new TransformNode("head rotate", Mat4Transform.rotateAroundZ(headRotateAngle));
+      headRotate = new TransformNode("head rotate", Mat4Transform.rotateAroundZ(0));
 
       NameNode leftArm = new NameNode("leftArm"); 
         m = new Mat4(1);
@@ -181,22 +181,42 @@ public class Alien {
   } 
 
   public void render(GL3 gl) {
-    updateBody();
     alienRoot.draw(gl);
   }
 
-  private void updateBody() {
-    double elapsedTime = getSeconds()-startTime;
+  //make alien rock its whole body and roll the head
+  public void alienRock() {
+    double elapsedTime = getSeconds() - startTime;
     bodyRotateAngle = bodyRotateAngleStart * (float)Math.sin(elapsedTime);
-    headRotateAngle = headRotateAngleStart * (float)Math.sin(elapsedTime*0.7f);
+    // headRotateAngle = headRotateAngleStart * (float)Math.sin(elapsedTime*0.7f);
     bodyRotate.setTransform(Mat4Transform.rotateAroundZ(bodyRotateAngle));
+    // headRotate.setTransform(Mat4Transform.rotateAroundZ(headRotateAngle));
+    alienRoot.update();
+  }
+
+  //make alien rock its whole body and roll the head
+  public void alienRoll() {
+    // bodyRotateAngle = bodyRotateAngleStart * (float)Math.sin(elapsedTime);
+    double elapsedTime = getSeconds() - startTime;
+    headRotateAngle = headRotateAngleStart * (float)Math.sin(elapsedTime*0.7f);
+    // bodyRotate.setTransform(Mat4Transform.rotateAroundZ(bodyRotateAngle));
     headRotate.setTransform(Mat4Transform.rotateAroundZ(headRotateAngle));
+    alienRoot.update();
+  }
+  //make alien rock its whole body and roll the head
+  public void stopRock() {
+    bodyRotate.setTransform(Mat4Transform.rotateAroundZ(0));
+    alienRoot.update();
+  }
+  //make alien rock its whole body and roll the head
+  public void stopRoll() {
+    headRotate.setTransform(Mat4Transform.rotateAroundZ(0));
     alienRoot.update();
   }
 
   public void dispose(GL3 gl) {
-      body_sphere.dispose(gl);
-    }
+    body_sphere.dispose(gl);
+  }
 
   private double startTime;
 

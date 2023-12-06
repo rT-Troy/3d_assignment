@@ -58,7 +58,8 @@ public class Aliens_GLEventListener implements GLEventListener {
     GL3 gl = drawable.getGL().getGL3();
     light.dispose(gl);
     floor.dispose(gl);
-    robot.dispose(gl);
+    alien1.dispose(gl);
+    alien2.dispose(gl);
   }
   
   
@@ -68,18 +69,26 @@ public class Aliens_GLEventListener implements GLEventListener {
    *
    */
    
-  private boolean animation = false;
+  private boolean rock1 = true;
+  private boolean rock2 = true;
+  private boolean roll1 = true;
+  private boolean roll2 = true;
   private double savedTime = 0;
    
-  public void startAnimation() {
-    animation = true;
-    startTime = getSeconds()-savedTime;
+  public void rock1Animation() {
+    rock1 = !rock1;
   }
    
-  public void stopAnimation() {
-    animation = false;
-    double elapsedTime = getSeconds()-startTime;
-    savedTime = elapsedTime;
+  public void rock2Animation() {
+    rock2 = !rock2;
+  }
+
+  public void roll1Animation() {
+    roll1 = !roll1;
+  }
+   
+  public void roll2Animation() {
+    roll2 = !roll2;
   }
    
   public void incXPosition() {
@@ -126,13 +135,17 @@ public class Aliens_GLEventListener implements GLEventListener {
     textures = new TextureLibrary();
     textures.add(gl, "background", "textures/snow_background.jpg");
     textures.add(gl, "snowfall", "textures/snowfall_black.jpg");
-    textures.add(gl, "texture1", "textures/texture1.jpg");
-    textures.add(gl, "texture2", "textures/texture2.jpg");
-    textures.add(gl, "texture3", "textures/texture3.jpg");
-    textures.add(gl, "texture4", "textures/texture4.jpg");
-    
+    textures.add(gl, "texture1", "textures/jade.jpg");
+    textures.add(gl, "texture1_spec", "textures/jade_specular.jpg");
+    textures.add(gl, "texture2", "textures/ear0xuu2.jpg");
+    textures.add(gl, "texture2_spec", "textures/ear0xuu2_specular.jpg");
+    textures.add(gl, "texture3", "textures/jup0vss1.jpg");
+    textures.add(gl, "texture3_spec", "textures/jup0vss1_specular.jpg");
+    textures.add(gl, "quicksand", "textures/quicksand.jpg");
+
     light = new Light(gl);
     light.setCamera(camera);
+    light.setPosition(new Vec3(-3f,5f,0f));
     
     // floor
     String name = "floor";
@@ -150,40 +163,51 @@ public class Aliens_GLEventListener implements GLEventListener {
     
     float posX1 = -1f;
     float posX2 = 3f;
-    //robot = new Robot(gl, camera, light, 
-    //                  textures.get("jade_diffuse"), textures.get("jade_specular"),
-    //                  textures.get("container_diffuse"), textures.get("container_specular"),
-    //                  textures.get("watt_diffuse"), textures.get("watt_specular")); 
-    alien1 = new Alien(gl, camera, light, posX1, textures.get("texture1"), textures.get("texture2"), textures.get("texture3"), textures.get("texture4"));
-    alien2 = new Alien(gl, camera, light, posX2, textures.get("texture3"), textures.get("texture2"), textures.get("texture4"), textures.get("texture4"));
+    alien1 = new Alien(gl, camera, light, posX1, textures.get("texture1"), textures.get("texture1_spec"), textures.get("texture2"), textures.get("texture2_spec"), textures.get("texture3"), textures.get("texture3_spec"));
+    alien2 = new Alien(gl, camera, light, posX2, textures.get("quicksand"), textures.get("texture3_spec"), textures.get("texture1"), textures.get("texture1_spec"), textures.get("texture2"), textures.get("texture2_spec"));
   }
  
   private void render(GL3 gl) {
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-    light.setPosition(getLightPosition());  // changing light position each frame
+    // light.setPosition(getLightPosition());  // changing light position each frame
     light.render(gl);
     floor.setModelMatrix(getMforFloor());
     floor.render(gl); 
     background.setModelMatrix(getMforBackground());
     background.render(gl);
-    if (animation) {
-      double elapsedTime = getSeconds()-startTime;
-      robot.updateAnimation(elapsedTime);
+    if (rock1) {
+      alien1.alienRock();
+    } else {
+      alien1.stopRock();
     }
-    //robot.render(gl);
+    if (rock2) {
+      alien2.alienRock();
+    } else {
+      alien2.stopRock();
+    }
+    if (roll1) {
+      alien1.alienRoll();
+    }else {
+      alien1.stopRoll();
+    }
+    if (roll2) {
+      alien2.alienRoll();
+    }else {
+      alien2.stopRoll();
+    }
     alien1.render(gl);
     alien2.render(gl);
   }
 
-  // The light's postion is continually being changed, so needs to be calculated for each frame.
-  private Vec3 getLightPosition() {
-    double elapsedTime = getSeconds()-startTime;
-    float x = 5.0f*(float)(Math.sin(Math.toRadians(elapsedTime*50)));
-    float y = 2.7f;
-    float z = 5.0f*(float)(Math.cos(Math.toRadians(elapsedTime*50)));
-    return new Vec3(x,y,z);   
-    //return new Vec3(5f,3.4f,5f);
-  }
+  // // The light's postion is continually being changed, so needs to be calculated for each frame.
+  // private Vec3 getLightPosition() {
+  //   double elapsedTime = getSeconds()-startTime;
+  //   float x = 5.0f*(float)(Math.sin(Math.toRadians(elapsedTime*50)));
+  //   float y = 2.7f;
+  //   float z = 5.0f*(float)(Math.cos(Math.toRadians(elapsedTime*50)));
+  //   return new Vec3(x,y,z);   
+  //   //return new Vec3(5f,3.4f,5f);
+  // }
 
   
   // ***************************************************

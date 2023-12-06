@@ -43,16 +43,16 @@ public class Aliens extends JFrame implements ActionListener {
     menuBar.add(fileMenu);
     
     JPanel p = new JPanel();
-      JButton b = new JButton("camera X");
+      JButton b = new JButton("Rock 1");
       b.addActionListener(this);
       p.add(b);
-      b = new JButton("camera Z");
+      b = new JButton("Rock 2");
       b.addActionListener(this);
       p.add(b);
-      b = new JButton("start");
+      b = new JButton("Roll 1");
       b.addActionListener(this);
       p.add(b);
-      b = new JButton("stop");
+      b = new JButton("Roll 2");
       b.addActionListener(this);
       p.add(b);
       b = new JButton("increase X position");
@@ -82,25 +82,25 @@ public class Aliens extends JFrame implements ActionListener {
   }
   
   public void actionPerformed(ActionEvent e) {
-    if (e.getActionCommand().equalsIgnoreCase("camera X")) {
-      camera.setCamera(Camera.CameraType.X);
-      canvas.requestFocusInWindow();
+    // if (e.getActionCommand().equalsIgnoreCase("camera X")) {
+    //   camera.setCamera(Camera.CameraType.X);
+    //   canvas.requestFocusInWindow();
+    // }
+    // else if (e.getActionCommand().equalsIgnoreCase("camera Z")) {
+    //   camera.setCamera(Camera.CameraType.Z);
+    //   canvas.requestFocusInWindow();
+    // }
+    if (e.getActionCommand().equalsIgnoreCase("Rock 1")) {
+      glEventListener.rock1Animation();
     }
-    else if (e.getActionCommand().equalsIgnoreCase("camera Z")) {
-      camera.setCamera(Camera.CameraType.Z);
-      canvas.requestFocusInWindow();
+    else if (e.getActionCommand().equalsIgnoreCase("Rock 2")) {
+      glEventListener.rock2Animation();
     }
-    else if (e.getActionCommand().equalsIgnoreCase("start")) {
-      glEventListener.startAnimation();
+    else if (e.getActionCommand().equalsIgnoreCase("Roll 1")) {
+      glEventListener.roll1Animation();
     }
-    else if (e.getActionCommand().equalsIgnoreCase("stop")) {
-      glEventListener.stopAnimation();
-    }
-    else if (e.getActionCommand().equalsIgnoreCase("increase X position")) {
-      glEventListener.incXPosition();
-    }
-    else if (e.getActionCommand().equalsIgnoreCase("decrease X position")) {
-      glEventListener.decXPosition();
+    else if (e.getActionCommand().equalsIgnoreCase("Roll 2")) {
+      glEventListener.roll2Animation();
     }
     // else if (e.getActionCommand().equalsIgnoreCase("lowered arms")) {
     //   glEventListener.loweredArms();
