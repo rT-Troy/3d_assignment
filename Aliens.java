@@ -1,3 +1,6 @@
+/* I declare that this code is my own work */
+/* Author Jun Zhang jzhang213@sheffield.ac.uk */
+
 import gmaths.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -61,12 +64,10 @@ public class Aliens extends JFrame implements ActionListener {
       b = new JButton("Light 2");
       b.addActionListener(this);
       p.add(b);
-      // b = new JButton("lowered arms");
-      // b.addActionListener(this);
-      // p.add(b);
-      // b = new JButton("raised arms");
-      // b.addActionListener(this);
-      // p.add(b);
+      b = new JButton("Spotlight");
+      b.addActionListener(this);
+      p.add(b);
+
     this.add(p, BorderLayout.SOUTH);
     
     addWindowListener(new WindowAdapter() {
@@ -82,14 +83,6 @@ public class Aliens extends JFrame implements ActionListener {
   }
   
   public void actionPerformed(ActionEvent e) {
-    // if (e.getActionCommand().equalsIgnoreCase("camera X")) {
-    //   camera.setCamera(Camera.CameraType.X);
-    //   canvas.requestFocusInWindow();
-    // }
-    // else if (e.getActionCommand().equalsIgnoreCase("camera Z")) {
-    //   camera.setCamera(Camera.CameraType.Z);
-    //   canvas.requestFocusInWindow();
-    // }
     if (e.getActionCommand().equalsIgnoreCase("Rock 1")) {
       glEventListener.rock1Animation();
     }
@@ -108,12 +101,9 @@ public class Aliens extends JFrame implements ActionListener {
     else if (e.getActionCommand().equalsIgnoreCase("Light 2")) {
       glEventListener.light2Swith();
     }
-    // else if (e.getActionCommand().equalsIgnoreCase("lowered arms")) {
-    //   glEventListener.loweredArms();
-    // }
-    // else if (e.getActionCommand().equalsIgnoreCase("raised arms")) {
-    //   glEventListener.raisedArms();
-    // }
+    else if (e.getActionCommand().equalsIgnoreCase("Spotlight")) {
+      glEventListener.spotLightSwith();
+    }
     else if(e.getActionCommand().equalsIgnoreCase("quit"))
       System.exit(0);
   }

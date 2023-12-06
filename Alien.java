@@ -1,5 +1,6 @@
-import gmaths.*;
+/*New file */
 
+import gmaths.*;
 import java.nio.*;
 import com.jogamp.common.nio.*;
 import com.jogamp.opengl.*;
@@ -26,8 +27,9 @@ public class Alien {
   public Alien(GL3 gl, Camera cameraIn, Light[] lightsIn, float posX, Texture t1, Texture t2, Texture t3, Texture t4, Texture t5, Texture t6) {
       this.camera = cameraIn;
       this.lights = lightsIn;
-      this.xPosition = posX;
+      this.xPosition = posX;  //x cordinate of Alien position
 
+      //every different sphere use different textures
       body_sphere = makeSphere(gl, t1, t2);
       head_sphere = makeSphere(gl, t3, t4);
       arm_sphere = makeSphere(gl, t5,t6);
@@ -62,7 +64,7 @@ public class Alien {
         m = Mat4.multiply(m, Mat4Transform.scale(bodyScale,bodyScale,bodyScale));
         TransformNode bodyTransform = new TransformNode("alien body", m);
           ModelNode bodyShape = new ModelNode("Sphere(body)", body_sphere);
-      // body animate
+      // body rotate
       bodyRotate = new TransformNode("body rotate",Mat4Transform.rotateAroundZ(0));
 
       NameNode head = new NameNode("head"); 
@@ -71,6 +73,7 @@ public class Alien {
         m = Mat4.multiply(m, Mat4Transform.scale(headScale,headScale,headScale));
         TransformNode headTransform = new TransformNode("alien head", m);
           ModelNode headShape = new ModelNode("Sphere(head)", head_sphere);
+      // head rotate
       headRotate = new TransformNode("head rotate", Mat4Transform.rotateAroundZ(0));
 
       NameNode leftArm = new NameNode("leftArm"); 
@@ -184,31 +187,27 @@ public class Alien {
     alienRoot.draw(gl);
   }
 
-  //make alien rock its whole body and roll the head
+  //make alien rock his whole body
   public void alienRock() {
     double elapsedTime = getSeconds() - startTime;
     bodyRotateAngle = bodyRotateAngleStart * (float)Math.sin(elapsedTime);
-    // headRotateAngle = headRotateAngleStart * (float)Math.sin(elapsedTime*0.7f);
     bodyRotate.setTransform(Mat4Transform.rotateAroundZ(bodyRotateAngle));
-    // headRotate.setTransform(Mat4Transform.rotateAroundZ(headRotateAngle));
     alienRoot.update();
   }
 
-  //make alien rock its whole body and roll the head
+  //make alien rock his head
   public void alienRoll() {
-    // bodyRotateAngle = bodyRotateAngleStart * (float)Math.sin(elapsedTime);
     double elapsedTime = getSeconds() - startTime;
-    headRotateAngle = headRotateAngleStart * (float)Math.sin(elapsedTime*0.7f);
-    // bodyRotate.setTransform(Mat4Transform.rotateAroundZ(bodyRotateAngle));
+    headRotateAngle = headRotateAngleStart * (float)Math.sin(elapsedTime*1.5f); //roll faster than body
     headRotate.setTransform(Mat4Transform.rotateAroundZ(headRotateAngle));
     alienRoot.update();
   }
-  //make alien rock its whole body and roll the head
+  //stop rock his body
   public void stopRock() {
     bodyRotate.setTransform(Mat4Transform.rotateAroundZ(0));
     alienRoot.update();
   }
-  //make alien rock its whole body and roll the head
+  //stop roll his head
   public void stopRoll() {
     headRotate.setTransform(Mat4Transform.rotateAroundZ(0));
     alienRoot.update();

@@ -67,42 +67,29 @@ public class Aliens_GLEventListener implements GLEventListener {
     lamPost.dispose(gl);
   }
   
-  
   // ***************************************************
   /* INTERACTION
-   *
-   *
+   *  achieve rock and roll for each alien independently
+   *  achieve each light switch independently
    */
-   
+  // set default status
   private boolean rock1 = true;
   private boolean rock2 = true;
   private boolean roll1 = true;
   private boolean roll2 = true;
   private boolean light1 = false;
   private boolean light2 = false;
+  private boolean spotlight = false;
+   
+  public void rock1Animation() {rock1 = !rock1;}
+  public void rock2Animation() {rock2 = !rock2;}
 
-   
-  public void rock1Animation() {
-    rock1 = !rock1;
-  }
-   
-  public void rock2Animation() {
-    rock2 = !rock2;
-  }
+  public void roll1Animation() {roll1 = !roll1;}
+  public void roll2Animation() {roll2 = !roll2;}
 
-  public void roll1Animation() {
-    roll1 = !roll1;
-  }
-   
-  public void roll2Animation() {
-    roll2 = !roll2;
-  }
-  public void light1Swith() {
-    light1 = !light1;
-  }
-  public void light2Swith() {
-    light2 = !light2;
-  }
+  public void light1Swith() {light1 = !light1;}
+  public void light2Swith() {light2 = !light2;}
+  public void spotLightSwith() {spotlight = !spotlight;}
   
   // ***************************************************
   /* THE SCENE
@@ -117,11 +104,8 @@ public class Aliens_GLEventListener implements GLEventListener {
   private Mat4 perspective;
   private Model floor;
   private Model background;
-  // private GeneralLight genlight1;
-  // private GeneralLight genlight2;
-  // lights[1] is the security spotlight
-  // lights[2] and lights[3] is the general light
-  private Light[] lights = new Light[3];
+
+  private Light[] lights = new Light[3];  //light list
   private Alien alien1;
   private Alien alien2;
   private LampPost lamPost;
@@ -130,7 +114,7 @@ public class Aliens_GLEventListener implements GLEventListener {
 
     textures = new TextureLibrary();
     textures.add(gl, "background", "textures/snow_background.jpg");
-    textures.add(gl, "snowfall", "textures/snowfall_black.jpg");
+    textures.add(gl, "snowfall", "textures/snowfall.jpg");
     textures.add(gl, "texture1", "textures/jade.jpg");
     textures.add(gl, "texture1_spec", "textures/jade_specular.jpg");
     textures.add(gl, "texture2", "textures/ear0xuu2.jpg");
@@ -139,10 +123,7 @@ public class Aliens_GLEventListener implements GLEventListener {
     textures.add(gl, "texture3_spec", "textures/jup0vss1_specular.jpg");
     textures.add(gl, "quicksand", "textures/quicksand.jpg");
 
-    // genlight1 = new GeneralLight(gl, new Vec3(-3f,5f,0f));
-    // genlight1.setCamera(camera);
-    // genlight2 = new GeneralLight(gl, new Vec3(3f,7f,3f));
-    // genlight2.setCamera(camera);
+    //Build lights with position and identify if it is spotlight or general light
     lights[0] = new Light(gl,new Vec3(-3f,7.8f,0f), true);
     lights[0].setCamera(camera);
     lights[1] = new Light(gl,new Vec3(3f,2f,3f), false);
@@ -157,19 +138,20 @@ public class Aliens_GLEventListener implements GLEventListener {
     Material material = new Material(new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.3f, 0.3f, 0.3f), 16.0f);
     floor = new Model(name, mesh, new Mat4(1), shader, material, lights, camera, textures.get("background"));
 
+    // background: snow scene with snowfall
     name = "background";
     mesh = new Mesh(gl, TwoTriangles.vertices_background.clone(), TwoTriangles.indices.clone());
     shader = new Shader(gl, "shaders/vs_background.txt", "shaders/fs_background.txt");
     material = new Material(new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.3f, 0.3f, 0.3f), 16.0f); 
-    // diffuse texture only for this model
     background = new Model(name, mesh, new Mat4(1), shader, material, lights, camera, textures.get("background"), textures.get("snowfall"));
     
+    // preset the x position of alien
     float posX1 = -1f;
     float posX2 = 3f;
     alien1 = new Alien(gl, camera, lights, posX1, textures.get("texture1"), textures.get("texture1_spec"), textures.get("texture2"), textures.get("texture2_spec"), textures.get("texture3"), textures.get("texture3_spec"));
     alien2 = new Alien(gl, camera, lights, posX2, textures.get("quicksand"), textures.get("texture3_spec"), textures.get("texture1"), textures.get("texture1_spec"), textures.get("texture2"), textures.get("texture2_spec"));
+    
     lamPost = new LampPost(gl, camera, lights, textures.get("background"), textures.get("snowfall"));
-
   }
  
   private void render(GL3 gl) {
@@ -178,6 +160,7 @@ public class Aliens_GLEventListener implements GLEventListener {
     floor.render(gl); 
     background.setModelMatrix(getMforBackground());
     background.render(gl);
+    // detect the button status
     if (rock1) {
       alien1.alienRock();
     } else {
@@ -208,6 +191,11 @@ public class Aliens_GLEventListener implements GLEventListener {
     } else {
       lights[2].turnOn();
     }
+    if (spotlight) {
+      lights[0].turnOff();
+    } else {
+      lights[0].turnOn();
+    }
     alien1.render(gl);
     alien2.render(gl);
     lamPost.render(gl);
@@ -216,8 +204,8 @@ public class Aliens_GLEventListener implements GLEventListener {
     lights[2].render(gl);
   }
 
-
-  // combine two planes
+//************************************
+  // match each plane at the join
   private float SIDE_LENGTH = 12f;
   private Mat4 getMforFloor() {
     Mat4 modelMatrix = new Mat4(1);
