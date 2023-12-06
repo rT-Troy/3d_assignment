@@ -1,5 +1,3 @@
-/*New file */
-
 import gmaths.*;
 import java.nio.*;
 import com.jogamp.common.nio.*;

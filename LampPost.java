@@ -18,23 +18,16 @@ public class LampPost {
   private Model head_sphere, body_sphere;
   private TransformNode LampPostMoveTranslate;
   private SGNode LampPostRoot;
+  //set lamp post x coordinate position
   private float xPosition = -4f;
 
 
-  public LampPost(GL3 gl, Camera cameraIn, Light[] lightsIn, Texture t1, Texture t2) {
+  public LampPost(GL3 gl, Camera cameraIn, Light[] lightsIn, Texture t1) {
       this.camera = cameraIn;
       this.lights = lightsIn;
 
-      // body_sphere = makeSphere(gl, t1, t2);
-      // head_sphere = makeSphere(gl, t3, t4);
-      // arm_sphere = makeSphere(gl, t5,t6);
-      // eye_sphere = makeSphere(gl, t2, t4);
-      // ear_sphere = makeSphere(gl, t4, t6);
-      // antstick_sphere = makeSphere(gl, t1, t3);
-      // antsphere_sphere = makeSphere(gl, t3, t5);
-
-      body_sphere = makeSphere(gl, t1, t2);
-      head_sphere = makeSphere(gl, t1, t2);
+      body_sphere = makeSphere(gl, t1);
+      head_sphere = makeSphere(gl, t1);
 
       float bodyRadius = 8.0f/2;
       float bodyScaleX = 0.2f;
@@ -75,13 +68,13 @@ public class LampPost {
 
   }
 
-  private Model makeSphere(GL3 gl, Texture t1, Texture t2) {
+  private Model makeSphere(GL3 gl, Texture t1) {
     String name= "sphere";
     Mesh mesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
-    Shader shader = new Shader(gl, "shaders/vs_standard.txt", "shaders/fs_standard_m_2t.txt");
+    Shader shader = new Shader(gl, "shaders/vs_standard.txt", "shaders/fs_standard_m_1t.txt");
     Material material = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
     Mat4 modelMatrix = Mat4.multiply(Mat4Transform.scale(4,4,4), Mat4Transform.translate(0,0.5f,0));
-    Model sphere = new Model(name, mesh, modelMatrix, shader, material, lights, camera, t1, t2);
+    Model sphere = new Model(name, mesh, modelMatrix, shader, material, lights, camera, t1);
     return sphere;
   } 
 

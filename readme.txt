@@ -1,8 +1,9 @@
 ## COM3503: 3D Computer Graphics: Assignment
 
 ### Declaration
-/* I declare that this code is my own work */
-/* Author Jun Zhang jzhang213@sheffield.ac.uk */
+ I declare that this code is my own work 
+ 
+ Author Jun Zhang jzhang213@sheffield.ac.uk 
 
 ### Texture Source
 snow_background.jpg - 
@@ -23,11 +24,31 @@ jup0vss1.jpg - [https://github.com/nasa/NASA-3D-Resources]
 Thanks to Dr. Steve Maddock for providing the tutorial and material. Some of the code in this project is derived from his work.
 
 ### My Main Works
+For the convenience of evaluation, the files with major changes are listed below for your reference, other files may also have modifications.
 
-Aliens.java
-Aliens_GLEventListener.java
-Light.java
-LampPost.java
-Model.java: multiple lights support
-vs_background.txt: mix two textures
-fs_background.txt: mix two textures
+#### Aliens.java: 
+add button, could switch every light, rock or roll every alien independently
+
+#### Aliens_GLEventListener.java: 
+create 2 alien, 1 lampPost objects from their class, 
+aliens are in different textures.
+build and joint floor and background in different shader,
+the background rely on mixed texture.
+
+#### Alien.java: 
+alien class
+
+#### Light.java: 
+set different type light by boolean argument, could switch independently
+
+#### LampPost.java:
+lamp post class
+
+#### Model.java: 
+multiple lights support
+
+#### vs_background.txt: 
+keep the snowfall moving
+
+#### fs_background.txt: 
+mix two textures 

@@ -9,6 +9,7 @@ import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 
+/* NEW */
 public class Aliens extends JFrame implements ActionListener {
   
   private static final int WIDTH = 1024;

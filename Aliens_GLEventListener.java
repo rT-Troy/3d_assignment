@@ -151,7 +151,7 @@ public class Aliens_GLEventListener implements GLEventListener {
     alien1 = new Alien(gl, camera, lights, posX1, textures.get("texture1"), textures.get("texture1_spec"), textures.get("texture2"), textures.get("texture2_spec"), textures.get("texture3"), textures.get("texture3_spec"));
     alien2 = new Alien(gl, camera, lights, posX2, textures.get("quicksand"), textures.get("texture3_spec"), textures.get("texture1"), textures.get("texture1_spec"), textures.get("texture2"), textures.get("texture2_spec"));
     
-    lamPost = new LampPost(gl, camera, lights, textures.get("background"), textures.get("snowfall"));
+    lamPost = new LampPost(gl, camera, lights, textures.get("background"));
   }
  
   private void render(GL3 gl) {
