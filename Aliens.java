@@ -55,10 +55,10 @@ public class Aliens extends JFrame implements ActionListener {
       b = new JButton("Roll 2");
       b.addActionListener(this);
       p.add(b);
-      b = new JButton("increase X position");
+      b = new JButton("Light 1");
       b.addActionListener(this);
       p.add(b);
-      b = new JButton("decrease X position");
+      b = new JButton("Light 2");
       b.addActionListener(this);
       p.add(b);
       // b = new JButton("lowered arms");
@@ -101,6 +101,12 @@ public class Aliens extends JFrame implements ActionListener {
     }
     else if (e.getActionCommand().equalsIgnoreCase("Roll 2")) {
       glEventListener.roll2Animation();
+    }
+    else if (e.getActionCommand().equalsIgnoreCase("Light 1")) {
+      glEventListener.light1Swith();
+    }
+    else if (e.getActionCommand().equalsIgnoreCase("Light 2")) {
+      glEventListener.light2Swith();
     }
     // else if (e.getActionCommand().equalsIgnoreCase("lowered arms")) {
     //   glEventListener.loweredArms();

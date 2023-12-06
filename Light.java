@@ -10,29 +10,37 @@ public class Light {
   private Mat4 model;
   private Shader shader;
   private Camera camera;
+  private boolean isSpotlight;
   
   //boolean spot: True if it is security spotlight
   public Light(GL3 gl, Vec3 vec3, boolean isSpotlight) {
-    if (isSpotlight) {
-      material = new Material();
-      material.setAmbient(0.9f, 0.9f, 0.9f);
-      material.setDiffuse(0.8f, 0.8f, 0.8f);
-      material.setSpecular(0.8f, 0.8f, 0.8f);
-      position = vec3;
-      model = new Mat4(1);
-      fillBuffers(gl);
-      shader = new Shader(gl, "shaders/vs_light_01.txt", "shaders/fs_light_01.txt");
+    this.isSpotlight = isSpotlight;
+    material = new Material();
+    turnOn(); //turn on at initial
+    position = vec3;
+    model = new Mat4(1);
+    fillBuffers(gl);
+    shader = new Shader(gl, "shaders/vs_light_01.txt", "shaders/fs_light_01.txt");
+  
+  }
 
+// turn the light off
+  public void turnOn() {
+    if (isSpotlight) {
+      material.setAmbient(0.3f, 0.3f, 0.3f);
+      material.setDiffuse(0.3f, 0.3f, 0.3f);
+      material.setSpecular(0.2f, 0.2f, 0.2f);
     } else {
-      material = new Material();
-      material.setAmbient(0.25f, 0.25f, 0.25f);
-      material.setDiffuse(0.4f, 0.4f, 0.4f);
-      material.setSpecular(0.4f, 0.4f, 0.4f);
-      position = vec3; //new Vec3(3f,2f,1f);
-      model = new Mat4(1);
-      fillBuffers(gl);
-      shader = new Shader(gl, "shaders/vs_light_01.txt", "shaders/fs_light_01.txt");
+      material.setAmbient(0.1f, 0.1f, 0.1f);
+      material.setDiffuse(0.1f, 0.1f, 0.1f);
+      material.setSpecular(0.1f, 0.1f, 0.1f);
     }
+  }
+// turn the light off
+  public void turnOff() {
+    material.setAmbient(0f, 0f, 0f);
+    material.setDiffuse(0f, 0f, 0f);
+    material.setSpecular(0f, 0f, 0f);
   }
   
   public void setPosition(Vec3 v) {
@@ -145,7 +153,6 @@ public class Light {
     IntBuffer ib = Buffers.newDirectIntBuffer(indices);
     gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, elementBufferId[0]);
     gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, Integer.BYTES * indices.length, ib, GL.GL_STATIC_DRAW);
-    //gl.glBindVertexArray(0);
   } 
 
 }

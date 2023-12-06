@@ -64,6 +64,7 @@ public class Aliens_GLEventListener implements GLEventListener {
     floor.dispose(gl);
     alien1.dispose(gl);
     alien2.dispose(gl);
+    lamPost.dispose(gl);
   }
   
   
@@ -77,6 +78,9 @@ public class Aliens_GLEventListener implements GLEventListener {
   private boolean rock2 = true;
   private boolean roll1 = true;
   private boolean roll2 = true;
+  private boolean light1 = false;
+  private boolean light2 = false;
+
    
   public void rock1Animation() {
     rock1 = !rock1;
@@ -92,6 +96,12 @@ public class Aliens_GLEventListener implements GLEventListener {
    
   public void roll2Animation() {
     roll2 = !roll2;
+  }
+  public void light1Swith() {
+    light1 = !light1;
+  }
+  public void light2Swith() {
+    light2 = !light2;
   }
   
   // ***************************************************
@@ -114,9 +124,9 @@ public class Aliens_GLEventListener implements GLEventListener {
   private Light[] lights = new Light[3];
   private Alien alien1;
   private Alien alien2;
+  private LampPost lamPost;
 
   private void initialise(GL3 gl) {
-    createRandomNumbers();
 
     textures = new TextureLibrary();
     textures.add(gl, "background", "textures/snow_background.jpg");
@@ -133,9 +143,9 @@ public class Aliens_GLEventListener implements GLEventListener {
     // genlight1.setCamera(camera);
     // genlight2 = new GeneralLight(gl, new Vec3(3f,7f,3f));
     // genlight2.setCamera(camera);
-    lights[0] = new Light(gl,new Vec3(-6f,6f,0f), true);
+    lights[0] = new Light(gl,new Vec3(-3f,7.8f,0f), true);
     lights[0].setCamera(camera);
-    lights[1] = new Light(gl,new Vec3(3f,2f,1f), false);
+    lights[1] = new Light(gl,new Vec3(3f,2f,3f), false);
     lights[1].setCamera(camera);
     lights[2] = new Light(gl,new Vec3(3f,2f,1f),false);
     lights[2].setCamera(camera);
@@ -143,7 +153,7 @@ public class Aliens_GLEventListener implements GLEventListener {
     // floor
     String name = "floor";
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices_floor.clone(), TwoTriangles.indices.clone());
-    Shader shader = new Shader(gl, "shaders/vs_standard.txt", "shaders/fs_standard_1t.txt");
+    Shader shader = new Shader(gl, "shaders/vs_standard.txt", "shaders/fs_standard_m_1t.txt");
     Material material = new Material(new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.3f, 0.3f, 0.3f), 16.0f);
     floor = new Model(name, mesh, new Mat4(1), shader, material, lights, camera, textures.get("background"));
 
@@ -158,16 +168,12 @@ public class Aliens_GLEventListener implements GLEventListener {
     float posX2 = 3f;
     alien1 = new Alien(gl, camera, lights, posX1, textures.get("texture1"), textures.get("texture1_spec"), textures.get("texture2"), textures.get("texture2_spec"), textures.get("texture3"), textures.get("texture3_spec"));
     alien2 = new Alien(gl, camera, lights, posX2, textures.get("quicksand"), textures.get("texture3_spec"), textures.get("texture1"), textures.get("texture1_spec"), textures.get("texture2"), textures.get("texture2_spec"));
+    lamPost = new LampPost(gl, camera, lights, textures.get("background"), textures.get("snowfall"));
+
   }
  
   private void render(GL3 gl) {
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-    lights[0].setPosition(-7, 8f, 0f);  // changing light position each frame
-    lights[0].render(gl);
-    lights[1].setPosition(3f,7f,3f);  // changing light position each frame
-    lights[1].render(gl);
-    lights[2].setPosition(new Vec3(-3f,5f,0f));  // changing light position each frame
-    lights[2].render(gl);
     floor.setModelMatrix(getMforFloor());
     floor.render(gl); 
     background.setModelMatrix(getMforBackground());
@@ -192,34 +198,24 @@ public class Aliens_GLEventListener implements GLEventListener {
     }else {
       alien2.stopRoll();
     }
+    if (light1) {
+      lights[1].turnOff();
+    } else {
+      lights[1].turnOn();
+    }
+    if (light2) {
+      lights[2].turnOff();
+    } else {
+      lights[2].turnOn();
+    }
     alien1.render(gl);
     alien2.render(gl);
+    lamPost.render(gl);
+    lights[0].render(gl);
+    lights[1].render(gl);
+    lights[2].render(gl);
   }
 
-  
-  // ***************************************************
-  /* TIME
-   */ 
-  
-  private double startTime;
-  
-  private double getSeconds() {
-    return System.currentTimeMillis()/1000.0;
-  }
-
-  // ***************************************************
-  /* An array of random numbers
-   */ 
-  
-  private int NUM_RANDOMS = 1000;
-  private float[] randoms;
-  
-  private void createRandomNumbers() {
-    randoms = new float[NUM_RANDOMS];
-    for (int i=0; i<NUM_RANDOMS; ++i) {
-      randoms[i] = (float)Math.random();
-    }
-  }
 
   // combine two planes
   private float SIDE_LENGTH = 12f;

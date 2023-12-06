@@ -16,7 +16,7 @@ public class Alien {
   private Light[] lights;
 
   private Model head_sphere, body_sphere, arm_sphere, eye_sphere, ear_sphere, antstick_sphere, antsphere_sphere;
-  private TransformNode translateX, alienMoveTranslate, bodyRotate, headRotate;
+  private TransformNode alienMoveTranslate, bodyRotate, headRotate;
   private SGNode alienRoot;
   private float xPosition = 0;
   private float bodyRotateAngleStart = 10, bodyRotateAngle = bodyRotateAngleStart;
@@ -173,7 +173,7 @@ public class Alien {
   private Model makeSphere(GL3 gl, Texture t1, Texture t2) {
     String name= "sphere";
     Mesh mesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
-    Shader shader = new Shader(gl, "shaders/vs_standard.txt", "shaders/fs_standard_2t.txt");
+    Shader shader = new Shader(gl, "shaders/vs_standard.txt", "shaders/fs_standard_m_2t.txt");
     Material material = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
     Mat4 modelMatrix = Mat4.multiply(Mat4Transform.scale(4,4,4), Mat4Transform.translate(0,0.5f,0));
     Model sphere = new Model(name, mesh, modelMatrix, shader, material, lights, camera, t1, t2);
@@ -216,6 +216,12 @@ public class Alien {
 
   public void dispose(GL3 gl) {
     body_sphere.dispose(gl);
+    head_sphere.dispose(gl);
+    arm_sphere.dispose(gl);
+    eye_sphere.dispose(gl);
+    ear_sphere.dispose(gl);
+    antstick_sphere.dispose(gl);
+    antsphere_sphere.dispose(gl);
   }
 
   private double startTime;
